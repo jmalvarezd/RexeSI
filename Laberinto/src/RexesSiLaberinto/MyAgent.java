@@ -1,6 +1,8 @@
 package RexesSiLaberinto;
 
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import unalcol.agents.AgentProgram;
 import unalcol.agents.Percept;
 import unalcol.agents.simulate.util.SimpleLanguage;
@@ -31,14 +33,16 @@ public class MyAgent implements AgentProgram {
     protected int energy;
     protected Node current;
     protected int direction;
-    protected TreeMap<Integer,TreeMap<Integer,Node>> map = new TreeMap<>();
+    protected int[] position = new int[]{0,0};
+    protected int[] lastPosition = new int[]{0,0};
+    protected TreeMap<Integer,TreeMap<Integer,Node>> marked = new TreeMap<>();
 
     public MyAgent() {
     }
 
     public MyAgent(SimpleLanguage _language) {
         language = _language;
-        current = new Node(0,0,0,0,null);
+        current = new Node(true,position,0,null);
         direction = 0;
     }
 
@@ -50,107 +54,187 @@ public class MyAgent implements AgentProgram {
         cmd.clear();
     }
 
-    public int accion(boolean PF, boolean PD, boolean PA, boolean PI, boolean MT, boolean FAIL, int energy, boolean FOOD) {
+    public int accion(boolean PF, boolean PD, boolean PA, boolean PI, boolean MT, boolean FAIL, int energy, boolean FOOD) throws CloneNotSupportedException {
         if (MT) {
             return -1;
         }
         int k = 0;
-        System.out.println(current.x);
-        System.out.println(current.y);
-        if(!map.containsKey(current.x))
-            map.put(current.x, new TreeMap<>());
-        if(!map.get(current.x).containsKey(current.y))
-            map.get(current.x).put(current.y, current);
-        if (FOOD){
-            current.type = 1;
-        }
         
-        if(!PF && !PA && PD && PI){
-            if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
-                current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
-            }else{
-                current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
-            }
-            current = current.children[direction]; 
-            return 0;
-        }else{
-            if(!PA && PF && PD && PI){
-                direction = ( direction+2 )%4;
-                current = current.parent;
-                return 2;
-            }else{
-                if(current.parent != null){
-                    current.parent.marked++;
-                }
-                boolean[] candidates = {false,false,false};
-                if(!PF && 
-                        (map.containsKey(current.x + Node.MOVES[0][0]) 
-                        && map.get(current.x + Node.MOVES[0][0]).containsKey(current.y + Node.MOVES[0][1]) 
-                        && map.get(current.x + Node.MOVES[0][0]).get(current.y + Node.MOVES[0][1]).marked == 0)) 
-                        candidates[0] = true;
-                if(!PD && 
-                        (map.containsKey(current.x + Node.MOVES[1][0])
-                        && map.get(current.x + Node.MOVES[1][0]).containsKey(current.y + Node.MOVES[1][1])
-                        && map.get(current.x + Node.MOVES[1][0]).get(current.y + Node.MOVES[1][1]).marked == 0)) 
-                        candidates[1] = true;
-                if(!PI && 
-                        (map.containsKey(current.x + Node.MOVES[3][0])
-                        && map.get(current.x + Node.MOVES[3][0]).containsKey(current.y + Node.MOVES[3][1])
-                        && map.get(current.x + Node.MOVES[3][0]).get(current.y + Node.MOVES[3][1]).marked == 0)) candidates[2] = true;
-                if(!candidates[0] && !candidates[1] && !candidates[2]){
-                    direction = ( direction+2 )%4;
-                    current = current.parent;
-                    return 2;
-                }else{
-                    boolean flag = true;
-                    while (flag) {
-                        k = (int) (Math.random() * 3);
-                        System.out.println("k" + k);
-                        switch (k) {
-                            case 0:
-                                flag = !candidates[0];
-                                break;
-                            case 1:
-                                flag = !candidates[1];
-                                break;
-                            default:
-                                flag = !candidates[2];
-                                break;
-                        }
-                    }
-                    if(k == 0){
-                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
-                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
-                        }else{
-                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
-                        }
-                        current = current.children[direction]; 
-                    }
-                    if(k == 1){
-                        direction = (direction+1)%4;
-                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
-                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
-                        }else{
-                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
-                        }
-                        current = current.children[direction]; 
-                    }
-                    if(k == 2){
-                        direction = (direction+3)%4;
-                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
-                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
-                        }else{
-                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
-                        }
-                        current = current.children[direction]; 
-                    }
-                    return k;
-                }
-                
-            }
-            
+        //BACKWARDS
+        if(PF&&PD&&PI){
+            updateDirection(2);
+            updatePosition();
+            return 2;
         }
+        //LEFT
+        if(PD&&PF){
+            updateDirection(3);
+            updatePosition();
+            return 3;
+        }
+        //RIGHT
+        if(PI&&PF){
+            updateDirection(1);
+            updatePosition();
+            return 1;
+        }
+        //FORWARD
+        if(PI&&PD&&!PF){
+            updatePosition();
+            return 0;
+        }
+        if(FOOD && energy < 39){
+            return 4;
+        }
+        current.setPosition(lastPosition);
+        if(marked.containsKey(lastPosition[0])){
+            if(marked.get(lastPosition[0]).containsKey(lastPosition[1])){
+                marked.get(lastPosition[0]).get(lastPosition[1]).marked = true;
+            }else{
+                Node clone = (Node) current.clone();
+                marked.get(lastPosition[0]).put(lastPosition[1], clone);
+            }
+        }else{
+            marked.put(lastPosition[0], new TreeMap<>());
+            Node clone = (Node) current.clone();
+            marked.get(lastPosition[0]).put(lastPosition[1], clone);
+        }
+        //Escojemos una direccion
+        current.setPosition(position);
+        current.addAllChilds(PF, PD, PI, direction);
+        int action = current.getRandomChildAction(direction,marked);
+        updateDirection(action);
+        System.out.println("direction: " + direction);
+        updatePosition();
+        current.setPosition(position);
+        if(marked.containsKey(position[0])){
+            if(marked.get(position[0]).containsKey(position[1])){
+                marked.get(position[0]).get(position[1]).marked = true;
+            }else{
+                Node clone = (Node) current.clone();
+                marked.get(position[0]).put(position[1], clone);
+            }
+        }else{
+            marked.put(position[0], new TreeMap<>());
+            Node clone = (Node) current.clone();
+            marked.get(position[0]).put(position[1], clone);
+        }
+        return action;
+        
+        
+        
+        
+        
+//        if(!map.containsKey(current.x))
+//            map.put(current.x, new TreeMap<>());
+//        if(!map.get(current.x).containsKey(current.y))
+//            map.get(current.x).put(current.y, current);
+//        if (FOOD){
+//            current.type = 1;
+//        }
+        
+//        if(!PF && !PA && PD && PI){
+//            if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
+//                current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
+//            }else{
+//                current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
+//            }
+//            current = current.children[direction]; 
+//            return 0;
+//        }else{
+//            if(!PA && PF && PD && PI){
+//                direction = ( direction+2 )%4;
+//                current = current.parent;
+//                return 2;
+//            }else{
+//                System.out.println("Ultimo caso");
+//                if(current.parent != null){
+//                    current.parent.marked++;
+//                }
+//                boolean[] candidates = {false,false,false};
+//                if(!PF && 
+//                        ((map.containsKey(current.x + Node.MOVES[0][0]) 
+//                        && map.get(current.x + Node.MOVES[0][0]).containsKey(current.y + Node.MOVES[0][1]) 
+//                        && map.get(current.x + Node.MOVES[0][0]).get(current.y + Node.MOVES[0][1]).marked == 0) ||
+//                        (!map.containsKey(current.x + Node.MOVES[0][0])) ||
+//                        (map.containsKey(current.x + Node.MOVES[0][0]) 
+//                        && !map.get(current.x + Node.MOVES[0][0]).containsKey(current.y + Node.MOVES[0][1])))) 
+//                        candidates[0] = true;
+//                if(!PD && 
+//                        ((map.containsKey(current.x + Node.MOVES[1][0])
+//                        && map.get(current.x + Node.MOVES[1][0]).containsKey(current.y + Node.MOVES[1][1])
+//                        && map.get(current.x + Node.MOVES[1][0]).get(current.y + Node.MOVES[1][1]).marked == 0)||
+//                        (!map.containsKey(current.x + Node.MOVES[1][0]))||
+//                        (map.containsKey(current.x + Node.MOVES[1][0])
+//                        && !map.get(current.x + Node.MOVES[1][0]).containsKey(current.y + Node.MOVES[1][1]))
+//                        )
+//                        ) 
+//                        candidates[1] = true;
+//                if(!PI && 
+//                        ((map.containsKey(current.x + Node.MOVES[3][0])
+//                        && map.get(current.x + Node.MOVES[3][0]).containsKey(current.y + Node.MOVES[3][1])
+//                        && map.get(current.x + Node.MOVES[3][0]).get(current.y + Node.MOVES[3][1]).marked == 0)||
+//                        (!map.containsKey(current.x + Node.MOVES[3][0]))||
+//                        (map.containsKey(current.x + Node.MOVES[3][0])
+//                        && !map.get(current.x + Node.MOVES[3][0]).containsKey(current.y + Node.MOVES[3][1]))
+//                        )) 
+//                    candidates[2] = true;
+//                if(!candidates[0] && !candidates[1] && !candidates[2]){
+//                    System.out.println("Todos falsos");
+//                    direction = ( direction+2 )%4;
+//                    current = current.parent;
+//                    return 2;
+//                }else{
+//                    boolean flag = true;
+//                    while (flag) {
+//                        k = (int) (Math.random() * 3);
+//                        System.out.println("k" + k);
+//                        switch (k) {
+//                            case 0:
+//                                flag = !candidates[0];
+//                                break;
+//                            case 1:
+//                                flag = !candidates[1];
+//                                break;
+//                            default:
+//                                flag = !candidates[2];
+//                                break;
+//                        }
+//                    }
+//                    if(k == 0){
+//                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
+//                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
+//                        }else{
+//                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
+//                        }
+//                        current = current.children[direction]; 
+//                    }
+//                    if(k == 1){
+//                        direction = (direction+1)%4;
+//                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
+//                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
+//                        }else{
+//                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
+//                        }
+//                        current = current.children[direction]; 
+//                    }
+//                    if(k == 2){
+//                        direction = (direction+3)%4;
+//                        if(map.containsKey(current.x + Node.MOVES[direction][0]) && map.get(current.x + Node.MOVES[direction][0]).containsKey(current.y + Node.MOVES[direction][1]) ){
+//                            current.children[direction] = map.get(current.x + Node.MOVES[direction][0]).get(current.y + Node.MOVES[direction][1]);
+//                        }else{
+//                            current.children[direction] = new Node(current.x + Node.MOVES[direction][0], current.y + Node.MOVES[direction][1], 0, 0, current);
+//                        }
+//                        current = current.children[direction]; 
+//                    }
+//                    return k;
+//                }
+//                
+//            }
+            
+//        return 0;
     }
+    
 
     /**
      * execute
@@ -169,18 +253,39 @@ public class MyAgent implements AgentProgram {
             boolean FOOD = ((Boolean) p.getAttribute(language.getPercept(10)));
             energy = (int) (p.getAttribute(LabyrinthUtil.ENERGY));
             
-            int d = accion(PF, PD, PA, PI, MT, FAIL, energy, FOOD);
+            int d = 0;
+            try {
+                d = accion(PF, PD, PA, PI, MT, FAIL, energy, FOOD);
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(MyAgent.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (0 <= d && d < 4) {
                 for (int i = 1; i <= d; i++) {
                     cmd.add(language.getAction(3)); //rotate
                 }
                 cmd.add(language.getAction(2)); // advance
-            } else {
+            } else if(d == 4){ cmd.add(language.getAction(4)); }
+            else {
                 cmd.add(language.getAction(0)); // die
             }
         }
         String x = cmd.get(0);
         cmd.remove(0);
         return new Action(x);
+    }
+    private void updateDirection(int i){
+        this.direction = (this.direction + i)%4;
+    }
+    private void updatePosition(){
+        lastPosition = position.clone();
+        if(this.direction == 0)
+            this.position[0] -=1;
+        if(this.direction == 2)
+            this.position[0] +=1;
+        
+        if(this.direction == 1)
+            this.position[1] +=1;
+        if(this.direction == 3)
+            this.position[1] -=1;
     }
 }
