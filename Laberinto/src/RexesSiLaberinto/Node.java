@@ -135,7 +135,8 @@ public class Node implements Cloneable {
         int targeOrientation = 0;
         
         if (rollback){
-            targeOrientation = (orientation+2)%4;
+            return 2;
+            //targeOrientation = (orientation+2)%4;
         }else{
         if (childUP != null && childUP.samePosition(targetPosition)) {
             targeOrientation = 0;
