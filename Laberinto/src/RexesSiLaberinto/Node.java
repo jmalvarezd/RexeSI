@@ -16,7 +16,6 @@ import java.util.TreeMap;
  */
 public class Node implements Cloneable {
 
-    public static final int[][] MOVES = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; //up,right,down,left
     int[] position = new int[2];
     int type;
     Node parent;
@@ -61,16 +60,16 @@ public class Node implements Cloneable {
             globalOrientation = orientation;
             switch (globalOrientation) {
                 case 0:
-                    childUP = new Node(0, new int[]{position[0] - 1, position[1]}, 0, this);
+                    childUP = new Node(0, new int[]{position[0], position[1]+1}, 0, this);
                     break;
                 case 1:
-                    childRIGHT = new Node(0, new int[]{position[0], position[1] + 1}, 0, this);
+                    childRIGHT = new Node(0, new int[]{position[0]+1, position[1]}, 0, this);
                     break;
                 case 2:
-                    childDOWN = new Node(0, new int[]{position[0] + 1, position[1]}, 0, this);
+                    childDOWN = new Node(0, new int[]{position[0], position[1]-1}, 0, this);
                     break;
                 case 3:
-                    childLEFT = new Node(0, new int[]{position[0], position[1] - 1}, 0, this);
+                    childLEFT = new Node(0, new int[]{position[0]-1, position[1]}, 0, this);
                     break;
             }
         }
@@ -80,16 +79,16 @@ public class Node implements Cloneable {
             globalOrientation = (orientation + 1) % 4;
             switch (globalOrientation) {
                 case 0:
-                    childUP = new Node(0, new int[]{position[0] - 1, position[1]}, 0, this);
+                    childUP = new Node(0, new int[]{position[0], position[1]+1}, 0, this);
                     break;
                 case 1:
-                    childRIGHT = new Node(0, new int[]{position[0], position[1] + 1}, 0, this);
+                    childRIGHT = new Node(0, new int[]{position[0]+1, position[1]}, 0, this);
                     break;
                 case 2:
-                    childDOWN = new Node(0, new int[]{position[0] + 1, position[1]}, 0, this);
+                    childDOWN = new Node(0, new int[]{position[0], position[1]-1}, 0, this);
                     break;
                 case 3:
-                    childLEFT = new Node(0, new int[]{position[0], position[1] - 1}, 0, this);
+                    childLEFT = new Node(0, new int[]{position[0]-1, position[1]}, 0, this);
                     break;
             }
         }
@@ -99,16 +98,16 @@ public class Node implements Cloneable {
             globalOrientation = (orientation + 3) % 4;
             switch (globalOrientation) {
                 case 0:
-                    childUP = new Node(0, new int[]{position[0] - 1, position[1]}, 0, this);
+                    childUP = new Node(0, new int[]{position[0], position[1]+1}, 0, this);
                     break;
                 case 1:
-                    childRIGHT = new Node(0, new int[]{position[0], position[1] + 1}, 0, this);
+                    childRIGHT = new Node(0, new int[]{position[0]+1, position[1]}, 0, this);
                     break;
                 case 2:
-                    childDOWN = new Node(0, new int[]{position[0] + 1, position[1]}, 0, this);
+                    childDOWN = new Node(0, new int[]{position[0], position[1]-1}, 0, this);
                     break;
                 case 3:
-                    childLEFT = new Node(0, new int[]{position[0], position[1] - 1}, 0, this);
+                    childLEFT = new Node(0, new int[]{position[0]-1, position[1]}, 0, this);
                     break;
             }
         }
@@ -116,16 +115,16 @@ public class Node implements Cloneable {
             globalOrientation = (orientation + 2) % 4;
             switch (globalOrientation) {
                 case 0:
-                    childUP = new Node(0, new int[]{position[0] - 1, position[1]}, 0, this);
+                    childUP = new Node(0, new int[]{position[0], position[1]+1}, 0, this);
                     break;
                 case 1:
-                    childRIGHT = new Node(0, new int[]{position[0], position[1] + 1}, 0, this);
+                    childRIGHT = new Node(0, new int[]{position[0]+1, position[1]}, 0, this);
                     break;
                 case 2:
-                    childDOWN = new Node(0, new int[]{position[0] + 1, position[1]}, 0, this);
+                    childDOWN = new Node(0, new int[]{position[0], position[1]-1}, 0, this);
                     break;
                 case 3:
-                    childLEFT = new Node(0, new int[]{position[0], position[1] - 1}, 0, this);
+                    childLEFT = new Node(0, new int[]{position[0]-1, position[1]}, 0, this);
                     break;
             }
         }
@@ -162,6 +161,14 @@ public class Node implements Cloneable {
         return rotations;
     }
 
+    public boolean isMarked(TreeMap<Integer, TreeMap<Integer, Node>> map, int positionx, int positiony){
+        if(map.containsKey(positionx)){
+            if(map.get(positionx).containsKey(positiony)){
+                return true;
+            }
+        }
+        return false;
+    }
     public int getRandomChildAction(int agentOrientation, TreeMap<Integer, TreeMap<Integer, Node>> marked) {
 
         ArrayList<Node> childs = new ArrayList<>();
@@ -169,31 +176,31 @@ public class Node implements Cloneable {
         if (childUP != null && !(marked.containsKey(childUP.position[0]) && marked.get(childUP.position[0]).containsKey(childUP.position[1]))) {
             childs.add(childUP);
         } else {
-            if (childUP != null && (marked.get(childUP.position[0]).get(childUP.position[1]).marked < 2)) {
+            if (childUP != null && isMarked(marked,childUP.position[0],childUP.position[1])) {
                 childs.add(childUP);
             }
         }
         if (childDOWN != null && !(marked.containsKey(childDOWN.position[0]) && marked.get(childDOWN.position[0]).containsKey(childDOWN.position[1]))) {
             childs.add(childDOWN);
-        } else if (childDOWN != null && (marked.get(childDOWN.position[0]).get(childDOWN.position[1]).marked < 2)) {
+        } else if (childDOWN != null && isMarked(marked,childDOWN.position[0],childDOWN.position[1])) {
             childs.add(childDOWN);
         }
 
         if (childLEFT != null && !(marked.containsKey(childLEFT.position[0]) && marked.get(childLEFT.position[0]).containsKey(childLEFT.position[1]))) {
             childs.add(childLEFT);
-        } else if (childLEFT != null && (marked.get(childLEFT.position[0]).get(childLEFT.position[1]).marked < 2)) {
+        } else if (childLEFT != null && isMarked(marked,childLEFT.position[0],childLEFT.position[1])) {
             childs.add(childLEFT);
         }
         if (childRIGHT != null && !(marked.containsKey(childRIGHT.position[0]) && marked.get(childRIGHT.position[0]).containsKey(childRIGHT.position[1]))) {
             childs.add(childRIGHT);
-        } else if (childRIGHT != null && (marked.get(childRIGHT.position[0]).get(childRIGHT.position[1]).marked < 2)) {
+        } else if (childRIGHT != null && isMarked(marked,childRIGHT.position[0],childRIGHT.position[1])) {
             childs.add(childRIGHT);
         }
 
         int myRand = (int) (Math.random() * (childs.size() - 0) + 0);
         System.out.println("Size=" + childs.size());
         System.out.println("Rand=" + myRand);
-        if (childs.size() != 0 && (childs.get(myRand).marked <= 2)) {
+        if (childs.size() != 0 && (isMarked(marked,childs.get(myRand).position[0],childs.get(myRand).position[1]))) {
             childs.get(myRand).marked++;
         }else if(childs.size() == 0){
             int[] aux = new int[]{0,0};

@@ -33,7 +33,7 @@ public class MultiTeseoEaterMain {
 	    
 	    //Agent agent3 = new Agent(p3);
 	    Vector<Agent> agent = new Vector<Agent>();
-	    agent.add(agent1);
+	    //agent.add(agent1);
 	    agent.add(agent2);
 //	    Agent agent = new Agent( new RandomReflexTeseoAgentProgram( getLanguage() ) );
 	    MultiTeseoEaterMainFrame frame = new MultiTeseoEaterMainFrame( agent, getLanguage() );
