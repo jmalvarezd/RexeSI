@@ -42,7 +42,7 @@ public class MyAgent implements AgentProgram {
 
     public MyAgent(SimpleLanguage _language) {
         language = _language;
-        current = new Node(true,position,0,null);
+        current = new Node(1,position,0,null);
         direction = 0;
     }
 
@@ -89,7 +89,7 @@ public class MyAgent implements AgentProgram {
         current.setPosition(lastPosition);
         if(marked.containsKey(lastPosition[0])){
             if(marked.get(lastPosition[0]).containsKey(lastPosition[1])){
-                marked.get(lastPosition[0]).get(lastPosition[1]).marked = true;
+                marked.get(lastPosition[0]).get(lastPosition[1]).marked++;
             }else{
                 Node clone = (Node) current.clone();
                 marked.get(lastPosition[0]).put(lastPosition[1], clone);
@@ -101,7 +101,7 @@ public class MyAgent implements AgentProgram {
         }
         //Escojemos una direccion
         current.setPosition(position);
-        current.addAllChilds(PF, PD, PI, direction);
+        current.addAllChilds(PF, PD, PI, PA, direction);
         int action = current.getRandomChildAction(direction,marked);
         updateDirection(action);
         System.out.println("direction: " + direction);
@@ -109,7 +109,7 @@ public class MyAgent implements AgentProgram {
         current.setPosition(position);
         if(marked.containsKey(position[0])){
             if(marked.get(position[0]).containsKey(position[1])){
-                marked.get(position[0]).get(position[1]).marked = true;
+                marked.get(position[0]).get(position[1]).marked++;
             }else{
                 Node clone = (Node) current.clone();
                 marked.get(position[0]).put(position[1], clone);
