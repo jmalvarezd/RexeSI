@@ -194,14 +194,14 @@ public class MyAgent implements AgentProgram {
 //            marked.get(position[0]).put(position[1], clone);
 //        }
         if(!PF){
+            updateDirection(0);
+            updatePosition();
+            return 0;
+        }
+        if(!PD){
             updateDirection(1);
             updatePosition();
             return 1;
-        }
-        if(!PD){
-            updateDirection(2);
-            updatePosition();
-            return 2;
         }
         
         if(!PI){
