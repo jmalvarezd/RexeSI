@@ -31,13 +31,14 @@ public class MyAgent implements AgentProgram {
     protected SimpleLanguage language;
     protected Vector<String> cmd = new Vector<String>();
     protected int energy;
-    protected int lastEnergy = 0;
+    protected int lastEnergy;
+    protected boolean knownMaxEnergy;
+    protected int maxEnergy = 0;
     protected Node current;
     protected int direction;
     protected int[] position = new int[]{0,0};
     protected int[] lastPosition = new int[]{0,0};
     protected TreeMap<Integer,TreeMap<Integer,Node>> marked = new TreeMap<>();
-    protected Vector<Node> posibles = new Vector<Node>();
 
     public MyAgent() {
     }
@@ -67,6 +68,19 @@ public class MyAgent implements AgentProgram {
             updatePosition();
             return 2;
         }
+        
+        if(FOOD && knownMaxEnergy && maxEnergy-energy > 5){
+            return 4;
+        }
+        if(FOOD && !knownMaxEnergy){
+            if(lastEnergy == energy){
+                maxEnergy = energy;
+                knownMaxEnergy = true;
+                return 4;
+            }
+            lastEnergy = energy;
+            return 4;
+        }
         //LEFT
         if(PD&&PF){
             updateDirection(3);
@@ -84,11 +98,6 @@ public class MyAgent implements AgentProgram {
             updatePosition();
             return 0;
         }
-        if(FOOD && energy < 39){
-            lastEnergy = energy;
-            return 4;
-        }
-        posibles.clear();
         current.setPosition(lastPosition);
         if(!isMarked(marked, lastPosition[0], lastPosition[1])){
             mark(lastPosition[0], lastPosition[1], current);
@@ -193,15 +202,16 @@ public class MyAgent implements AgentProgram {
 //            Node clone = (Node) current.clone();
 //            marked.get(position[0]).put(position[1], clone);
 //        }
-        if(!PF){
-            updateDirection(0);
-            updatePosition();
-            return 0;
-        }
+
         if(!PD){
             updateDirection(1);
             updatePosition();
             return 1;
+        }
+        if(!PF){
+            updateDirection(0);
+            updatePosition();
+            return 0;
         }
         
         if(!PI){
@@ -209,8 +219,8 @@ public class MyAgent implements AgentProgram {
             updatePosition();
             return 3;
         }
-        
-        
+        updateDirection(0);
+        updatePosition();
         return 0;
         
         
