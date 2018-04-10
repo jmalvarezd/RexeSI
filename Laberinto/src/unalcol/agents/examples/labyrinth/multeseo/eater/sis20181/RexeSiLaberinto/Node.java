@@ -48,6 +48,11 @@ public class Node implements Cloneable {
     public void setPosition(int[] coords) {
         this.position = coords.clone();
     }
+    
+    public void setPosition(int x, int y) {
+        this.position[0] = x;
+        this.position[1] = y;
+    }
 
     public Object clone() throws CloneNotSupportedException {
         return super.clone();

@@ -37,6 +37,7 @@ public class MyAgent implements AgentProgram {
     protected int[] position = new int[]{0,0};
     protected int[] lastPosition = new int[]{0,0};
     protected TreeMap<Integer,TreeMap<Integer,Node>> marked = new TreeMap<>();
+    protected Vector<Node> posibles = new Vector<Node>();
 
     public MyAgent() {
     }
@@ -59,7 +60,6 @@ public class MyAgent implements AgentProgram {
         if (MT) {
             return -1;
         }
-        int k = 0;
         
         //BACKWARDS
         if(PF&&PD&&PI){
@@ -84,44 +84,116 @@ public class MyAgent implements AgentProgram {
             updatePosition();
             return 0;
         }
-        if(FOOD && (lastEnergy == 0 || energy-lastEnergy == 0)){
+        if(FOOD && energy < 39){
             lastEnergy = energy;
             return 4;
         }
+        posibles.clear();
         current.setPosition(lastPosition);
-        if(marked.containsKey(lastPosition[0])){
-            if(marked.get(lastPosition[0]).containsKey(lastPosition[1])){
-                marked.get(lastPosition[0]).get(lastPosition[1]).marked++;
-            }else{
-                Node clone = (Node) current.clone();
-                marked.get(lastPosition[0]).put(lastPosition[1], clone);
-            }
-        }else{
-            marked.put(lastPosition[0], new TreeMap<>());
-            Node clone = (Node) current.clone();
-            marked.get(lastPosition[0]).put(lastPosition[1], clone);
+        if(!isMarked(marked, lastPosition[0], lastPosition[1])){
+            mark(lastPosition[0], lastPosition[1], current);
         }
-        //Escojemos una direccion
-        current.setPosition(position);
-        current.addAllChilds(PF, PD, PI, PA, direction);
-        int action = current.getRandomChildAction(direction,marked);
-        //updateDirection(action);
-        System.out.println("direction: " + direction);
-        updatePosition();
-        current.setPosition(position);
-        if(marked.containsKey(position[0])){
-            if(marked.get(position[0]).containsKey(position[1])){
-                marked.get(position[0]).get(position[1]).marked++;
-            }else{
-                Node clone = (Node) current.clone();
-                marked.get(position[0]).put(position[1], clone);
+        Node posible = (Node)current.clone();
+        if(!PD){
+            switch(direction){
+                case(0):
+                    posible.setPosition(position[0]+1,position[1]);
+                    break;
+                case(1):
+                    posible.setPosition(position[0],position[1]-1);
+                    break;
+                case(2):
+                    posible.setPosition(position[0]-1,position[1]);
+                    break;
+                case(3):
+                    posible.setPosition(position[0],position[1]+1);
+                    break;
             }
-        }else{
-            marked.put(position[0], new TreeMap<>());
-            Node clone = (Node) current.clone();
-            marked.get(position[0]).put(position[1], clone);
+            if(!isMarked(marked, posible.position[0], posible.position[1])){
+                mark(posible.position[0], posible.position[1], posible);
+                updateDirection(1);
+                updatePosition();
+                return 1;
+            }
         }
-        return action;
+        if(!PF){
+            switch(direction){
+                case(0):
+                    posible.setPosition(position[0],position[1]+1);
+                    break;
+                case(1):
+                    posible.setPosition(position[0]+1,position[1]);
+                    break;
+                case(2):
+                    posible.setPosition(position[0],position[1]-1);
+                    break;
+                case(3):
+                    posible.setPosition(position[0]-1,position[1]);
+                    break;
+            }
+            if(!isMarked(marked, posible.position[0], posible.position[1])){
+                mark(posible.position[0], posible.position[1], posible);
+                updatePosition();
+                return 0;
+            }
+        }
+        if(!PI){
+            switch(direction){
+                case(0):
+                    posible.setPosition(position[0]-1,position[1]);
+                    break;
+                case(1):
+                    posible.setPosition(position[0],position[1]+1);
+                    break;
+                case(2):
+                    posible.setPosition(position[0]+1,position[1]);
+                    break;
+                case(3):
+                    posible.setPosition(position[0],position[1]-1);
+                    break;
+            }
+            if(!isMarked(marked, posible.position[0], posible.position[1])){
+                mark(posible.position[0], posible.position[1], posible);
+                updateDirection(3);
+                updatePosition();
+                return 3;
+            }
+        }
+        
+//        current.setPosition(lastPosition);
+//        if(marked.containsKey(lastPosition[0])){
+//            if(marked.get(lastPosition[0]).containsKey(lastPosition[1])){
+//                marked.get(lastPosition[0]).get(lastPosition[1]).marked++;
+//            }else{
+//                Node clone = (Node) current.clone();
+//                marked.get(lastPosition[0]).put(lastPosition[1], clone);
+//            }
+//        }else{
+//            marked.put(lastPosition[0], new TreeMap<>());
+//            Node clone = (Node) current.clone();
+//            marked.get(lastPosition[0]).put(lastPosition[1], clone);
+//        }
+//        //Escojemos una direccion
+//        current.setPosition(position);
+//        current.addAllChilds(PF, PD, PI, PA, direction);
+//        int action = current.getRandomChildAction(direction,marked);
+//        //updateDirection(action);
+//        System.out.println("direction: " + direction);
+//        updatePosition();
+//        current.setPosition(position);
+//        if(marked.containsKey(position[0])){
+//            if(marked.get(position[0]).containsKey(position[1])){
+//                marked.get(position[0]).get(position[1]).marked++;
+//            }else{
+//                Node clone = (Node) current.clone();
+//                marked.get(position[0]).put(position[1], clone);
+//            }
+//        }else{
+//            marked.put(position[0], new TreeMap<>());
+//            Node clone = (Node) current.clone();
+//            marked.get(position[0]).put(position[1], clone);
+//        }
+        return 1;
         
         
         
@@ -266,8 +338,9 @@ public class MyAgent implements AgentProgram {
                     cmd.add(language.getAction(3)); //rotate
                 }
                 cmd.add(language.getAction(2)); // advance
-            } else if(d == 4){ cmd.add(language.getAction(4)); }
-            else {
+            }  
+            if(d == 4){ cmd.add(language.getAction(4)); } //eat
+            if(d == -1) {
                 cmd.add(language.getAction(0)); // die
             }
         }
@@ -284,13 +357,27 @@ public class MyAgent implements AgentProgram {
     private void updatePosition(){
         lastPosition = position.clone();
         if(this.direction == 0)
-            this.position[0] -=1;
+            this.position[1] +=1;
         if(this.direction == 2)
-            this.position[0] +=1;
+            this.position[1] -=1;
         
         if(this.direction == 1)
-            this.position[1] +=1;
+            this.position[0] +=1;
         if(this.direction == 3)
-            this.position[1] -=1;
+            this.position[0] -=1;
+    }
+    public boolean isMarked(TreeMap<Integer, TreeMap<Integer, Node>> map, int positionx, int positiony){
+        if(map.containsKey(positionx)){
+            if(map.get(positionx).containsKey(positiony)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void mark(int positionx, int positiony, Node current){
+        if(!marked.containsKey(positionx)){
+            marked.put(positionx, new TreeMap<>());
+        }
+        marked.get(positionx).put(positiony, current);
     }
 }
