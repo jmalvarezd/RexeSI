@@ -193,10 +193,25 @@ public class MyAgent implements AgentProgram {
 //            Node clone = (Node) current.clone();
 //            marked.get(position[0]).put(position[1], clone);
 //        }
-        return 1;
+        if(!PF){
+            updateDirection(1);
+            updatePosition();
+            return 1;
+        }
+        if(!PD){
+            updateDirection(2);
+            updatePosition();
+            return 2;
+        }
+        
+        if(!PI){
+            updateDirection(3);
+            updatePosition();
+            return 3;
+        }
         
         
-        
+        return 0;
         
         
 //        if(!map.containsKey(current.x))
