@@ -9,7 +9,7 @@ import unalcol.agents.AgentProgram;
 import unalcol.agents.examples.labyrinth.Labyrinth;
 import unalcol.agents.examples.labyrinth.LabyrinthDrawer;
 import unalcol.agents.examples.labyrinth.teseo.simple.RandomReflexTeseo;
-import RexesSiLaberinto.MyAgent;
+import unalcol.agents.examples.labyrinth.multeseo.eater.sis20181.RexeSiLaberinto.*;
 import unalcol.agents.simulate.util.SimpleLanguage;
 import unalcol.types.collection.vector.Vector;
 

@@ -1,4 +1,4 @@
-package RexesSiLaberinto;
+package unalcol.agents.examples.labyrinth.multeseo.eater.sis20181.RexeSiLaberinto;
 
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -31,6 +31,7 @@ public class MyAgent implements AgentProgram {
     protected SimpleLanguage language;
     protected Vector<String> cmd = new Vector<String>();
     protected int energy;
+    protected int lastEnergy = 0;
     protected Node current;
     protected int direction;
     protected int[] position = new int[]{0,0};
@@ -83,7 +84,8 @@ public class MyAgent implements AgentProgram {
             updatePosition();
             return 0;
         }
-        if(FOOD && energy < 39){
+        if(FOOD && (lastEnergy == 0 || energy-lastEnergy == 0)){
+            lastEnergy = energy;
             return 4;
         }
         current.setPosition(lastPosition);
@@ -103,7 +105,7 @@ public class MyAgent implements AgentProgram {
         current.setPosition(position);
         current.addAllChilds(PF, PD, PI, PA, direction);
         int action = current.getRandomChildAction(direction,marked);
-        updateDirection(action);
+        //updateDirection(action);
         System.out.println("direction: " + direction);
         updatePosition();
         current.setPosition(position);
@@ -270,6 +272,9 @@ public class MyAgent implements AgentProgram {
             }
         }
         String x = cmd.get(0);
+        if(x == language.getAction(2)&&((Boolean) p.getAttribute(language.getPercept(6)))){
+            return new Action(language.getAction(0));
+        }
         cmd.remove(0);
         return new Action(x);
     }

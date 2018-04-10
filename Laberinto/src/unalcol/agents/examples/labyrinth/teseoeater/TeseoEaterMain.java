@@ -1,5 +1,5 @@
 package unalcol.agents.examples.labyrinth.teseoeater;
-import RexesSiLaberinto.MyAgent;
+import unalcol.agents.examples.labyrinth.multeseo.eater.sis20181.RexeSiLaberinto.*;
 import unalcol.agents.Agent;
 
 import unalcol.agents.examples.labyrinth.*;
