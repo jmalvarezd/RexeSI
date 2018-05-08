@@ -71,12 +71,7 @@ public class MyAgent implements AgentProgram {
                 markBadFood(position[0], position[1], current);
             }
         }
-        //BACKWARDS
-        if (PF && PD && PI) {
-            updateDirection(2);
-            updatePosition();
-            return 2;
-        }
+        
 
         if (!isMarked(badFood, position[0], position[1]) && FOOD && knownMaxEnergy &&maxEnergy - energy > 5) {
             
@@ -89,6 +84,12 @@ public class MyAgent implements AgentProgram {
                 return 4;
             }
             return 4;
+        }
+        //BACKWARDS
+        if (PF && PD && PI) {
+            updateDirection(2);
+            updatePosition();
+            return 2;
         }
         //LEFT
         if (PD && PF) {
