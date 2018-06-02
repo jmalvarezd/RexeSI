@@ -14,10 +14,10 @@ public class MiniMax {
     // turn impar es para jugadas del max
     // retorna indice del movimiento a hacer y su score según la heuristica
     
-    public int[] bestMove(Tablero t, String color, int turn, int K) {
+    public int[] bestMove(Board t, String color, int turn, int K) {
 
-        if (turn > K || t.posicionBlancas.isEmpty() || t.posicionNegras.isEmpty()) {
-            if((t.posicionBlancas.size()/2)+(t.posicionNegras.size()/2)+10 >= (t.tam*t.tam)){ //ENDGAME??
+        if (turn > K || t.posWhite.isEmpty() || t.posBlack.isEmpty()) {
+            if((t.posWhite.size()/2)+(t.posBlack.size()/2)+10 >= (t.size*t.size)){ //ENDGAME??
                 int score = scoreWhenFull(t, color);
                 return new int[]{0,score};
             }
@@ -32,8 +32,8 @@ public class MiniMax {
         for (int i = 0; i < moves.size(); i++) {
             if(id>4) break;
             id++;
-            Tablero tHijo = t.makeMove(moves.get(i), (turn%2==1)?color:invert(color));
-            tHijo.identificarFichas();
+            Board tHijo = t.makeMove(moves.get(i), (turn%2==1)?color:invert(color));
+            tHijo.identifyPieces();
             int score[] = bestMove(tHijo, color, turn + 1, K);
             
             
@@ -63,14 +63,14 @@ public class MiniMax {
         }
     }
 
-    private int score(Tablero tHijo, String color) {
+    private int score(Board tHijo, String color) {
         return tHijo.movimientos(color).size();
     }
-    private int scoreWhenFull(Tablero tHijo, String color) {
+    private int scoreWhenFull(Board tHijo, String color) {
         if (color.equals(Reversi.WHITE)) {
-            return tHijo.posicionBlancas.size() / 2;
+            return tHijo.posWhite.size() / 2;
         } else {
-            return tHijo.posicionNegras.size() / 2;
+            return tHijo.posBlack.size() / 2;
         }
     }
 }

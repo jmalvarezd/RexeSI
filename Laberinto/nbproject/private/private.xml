@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/multeseo/eater/MultiTeseoEaterMain.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/nbproject/build-impl.xml</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/multeseo/eater/MultiTeseoEaterLabyrinth.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/Agent.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/multeseo/eater/MultiTeseoEaterMainFrame.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/simulate/util/SimpleLanguage.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/multeseo/eater/MultiTeseoEaterLabyrinthDrawer.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/multeseo/eater/sis20181/RexeSiLaberinto/MyAgent.java</file>
-            <file>file:/C:/Users/Usuario/Desktop/RexeSi/Laberinto/src/unalcol/agents/examples/labyrinth/teseo/simple/SimpleTeseoAgentProgram.java</file>
+            <file>file:/C:/Users/INTEL/Desktop/proyecto%20optimizador%20de%20codigo%20fuente%20en%20c++/RexeSi-master/RexeSi-master/Laberinto/src/unalcol/agents/examples/games/reversi/sis20181/RexeSiReversi/Move.java</file>
+            <file>file:/C:/Users/INTEL/Desktop/proyecto%20optimizador%20de%20codigo%20fuente%20en%20c++/RexeSi-master/RexeSi-master/Laberinto/src/unalcol/agents/examples/games/reversi/sis20181/RexeSiReversi/MiniMax.java</file>
+            <file>file:/C:/Users/INTEL/Desktop/proyecto%20optimizador%20de%20codigo%20fuente%20en%20c++/RexeSi-master/RexeSi-master/Laberinto/src/unalcol/agents/examples/games/reversi/sis20181/RexeSiReversi/RexesAgent.java</file>
+            <file>file:/C:/Users/INTEL/Desktop/proyecto%20optimizador%20de%20codigo%20fuente%20en%20c++/RexeSi-master/RexeSi-master/Laberinto/src/unalcol/agents/examples/games/reversi/sis20181/RexeSiReversi/Board.java</file>
         </group>
     </open-files>
 </project-private>

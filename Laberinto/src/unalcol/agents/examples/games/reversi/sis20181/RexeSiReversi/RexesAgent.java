@@ -22,7 +22,7 @@ public class RexesAgent implements AgentProgram {
     protected String color;
     protected int tam;
     protected int fvez = 0;
-    protected Tablero tablero;
+    protected Board tablero;
     protected int K = 10;
     Map<String, Integer> valor = new HashMap<>();
 
@@ -38,26 +38,26 @@ public class RexesAgent implements AgentProgram {
         if (fvez == 0) {
             fvez = 1;
             tam = Integer.parseInt(p.getAttribute(Reversi.SIZE).toString());
-            tablero = new Tablero(tam);
+            tablero = new Board(tam);
         }
 
         if (p.getAttribute(Reversi.TURN).equals(color)) {
             leerTablero(p);                                                     // Lee el tablero actual
             String strArray[] = p.getAttribute(color+"_"+Reversi.TIME).toString().split(":");
-            tablero.identificarFichas();                                        // Identifica posiciones fichas negras y blancas
+            tablero.identifyPieces();                                        // Identifica posiciones fichas negras y blancas
             ArrayList<Move> posibleMov = tablero.movimientos(color);            // Movimientos válidos a partir de mis posiciones actuales        
             // No se puede ejecutar movimiento alguno, pasa turno
             if ( posibleMov.isEmpty() ) {
                 return new Action(Reversi.PASS);
             }
             if(strArray[2].equals("0")  && strArray[1].equals("0")  && strArray[0].equals("0")){ // Si nos estamos quedando sin tiempo
-                return new Action(posibleMov.get(0).hasta[0]+":"+posibleMov.get(0).hasta[1]+":"+color);
+                return new Action(posibleMov.get(0).to[0]+":"+posibleMov.get(0).to[1]+":"+color);
             }
             int bestMoveIndesx[] = new MiniMax().bestMove(tablero, color, 1, 3);
             //Otras condiciones donde no hay mas jugadas por hacer
             
             if( bestMoveIndesx.length>=1 && bestMoveIndesx[0]>=0)
-                return new Action(posibleMov.get(bestMoveIndesx[0]).hasta[0] + ":" + posibleMov.get(bestMoveIndesx[0]).hasta[1] + ":" + color);
+                return new Action(posibleMov.get(bestMoveIndesx[0]).to[0] + ":" + posibleMov.get(bestMoveIndesx[0]).to[1] + ":" + color);
             else
                 return new Action(Reversi.PASS);
         }

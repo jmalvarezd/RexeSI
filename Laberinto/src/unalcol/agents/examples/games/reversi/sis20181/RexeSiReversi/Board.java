@@ -10,36 +10,36 @@ import java.util.ArrayList;
  *
  * @author Usuario
  */
-public class Tablero {
+public class Board {
     static final int movX[] = {-1, -1, -1, 0, 0, 1, 1, 1};
     static final int movY[] = {-1, 0, 1, -1, 1, -1, 0, 1};
     int[][] t;
-    public int tam;
-    ArrayList<Integer> posicionBlancas;
-    ArrayList<Integer> posicionNegras;
+    public int size;
+    ArrayList<Integer> posWhite;
+    ArrayList<Integer> posBlack;
 
-    public Tablero(int tam) {
+    public Board(int tam) {
         this(new int[tam][tam], tam);
     }
 
-    public Tablero(int[][] tablero, int tam) {
-        this.t = tablero;
-        this.tam = tam;
-        posicionBlancas = new ArrayList<>();
-        posicionNegras = new ArrayList<>();
+    public Board(int[][] board, int tam) {
+        this.t = board;
+        this.size = tam;
+        posWhite = new ArrayList<>();
+        posBlack = new ArrayList<>();
     }
 
-    public void identificarFichas() {
-        posicionBlancas.clear();
-        posicionNegras.clear();
-        for (int i = 0; i < tam; i++) {
-            for (int j = 0; j < tam; j++) {
+    public void identifyPieces() {
+        posWhite.clear();
+        posBlack.clear();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (t[i][j] == 1) {
-                    posicionBlancas.add(i);
-                    posicionBlancas.add(j);
+                    posWhite.add(i);
+                    posWhite.add(j);
                 } else if (t[i][j] == -1) {
-                    posicionNegras.add(i);
-                    posicionNegras.add(j);
+                    posBlack.add(i);
+                    posBlack.add(j);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class Tablero {
 
     ArrayList<Move> movimientos(String colorS) {
         int color = colorS.equals(Reversi.WHITE) ? 1 : -1;
-        ArrayList<Integer> posiciones = (color == 1) ? posicionBlancas : posicionNegras;
+        ArrayList<Integer> posiciones = (color == 1) ? posWhite : posBlack;
         ArrayList<Move> movimientos = new ArrayList<>();
         int x, y;
         int posMov[];
@@ -90,19 +90,19 @@ public class Tablero {
     }
 
     private boolean isValid(int x, int y) {
-        return x >= 0 && x < tam && y >= 0 && y < tam;
+        return x >= 0 && x < size && y >= 0 && y < size;
     }
     
     
-    Tablero makeMove(Move m, String color) {
+    Board makeMove(Move m, String color) {
         int[][] tablero = makeCopy();
         //flipCoins(tablero, m, (color.equals(Reversi.WHITE))?1:-1);
         play(tablero, m, (color.equals(Reversi.WHITE))?1:-1);
-        return new Tablero(tablero, tablero.length); 
+        return new Board(tablero, tablero.length); 
     }  
     
      private int[][] makeCopy() {
-        int newT[][] = new int[tam][tam];
+        int newT[][] = new int[size][size];
         for(int i = 0; i < t.length; i++){
             for(int j = 0; j < t.length; j++){
                 newT[i][j] = t[i][j];
@@ -120,8 +120,8 @@ public class Tablero {
      * @return 
      */
     public boolean play( int[][]t, Move m, int val ){
-        int x = m.desde[0];
-        int y = m.desde[1];
+        int x = m.from[0];
+        int y = m.from[1];
         if( t[x][y] != 0 ) return false;
         boolean flag1 = l_play(t, x, y, val);
         boolean flag2 = u_play(t, x, y, val);
@@ -280,8 +280,8 @@ public class Tablero {
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tam; i++) {
-            for (int j = 0; j < tam; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 sb.append("|" + t[i][j] + "|");
             }
             sb.append("\n");
