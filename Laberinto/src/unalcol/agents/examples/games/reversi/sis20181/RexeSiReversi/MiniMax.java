@@ -14,9 +14,9 @@ public class MiniMax {
     // turn impar es para jugadas del max
     // retorna indice del movimiento a hacer y su score según la heuristica
     
-    public int[] bestMove(Board t, String color, int turn, int K) {
+    public int[] bestMove(Board t, String color, int turn, int limTurnos) {
 
-        if (turn > K || t.posWhite.isEmpty() || t.posBlack.isEmpty()) {
+        if (turn > limTurnos || t.posWhite.isEmpty() || t.posBlack.isEmpty()) {
             if((t.posWhite.size()/2)+(t.posBlack.size()/2)+10 >= (t.size*t.size)){ //ENDGAME??
                 int score = scoreWhenFull(t, color);
                 return new int[]{0,score};
@@ -34,7 +34,7 @@ public class MiniMax {
             id++;
             Board tHijo = t.makeMove(moves.get(i), (turn%2==1)?color:invert(color));
             tHijo.identifyPieces();
-            int score[] = bestMove(tHijo, color, turn + 1, K);
+            int score[] = bestMove(tHijo, color, turn + 1, limTurnos);
             
             
             // MAX play
