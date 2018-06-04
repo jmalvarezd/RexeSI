@@ -25,6 +25,7 @@ public class ReversiDrawer extends Drawer{
     }
 
     @Override
+
     public void paint(Graphics g) {
         if( environment != null ){
             Reversi reversi = (Reversi)environment;

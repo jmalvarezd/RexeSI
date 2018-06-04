@@ -252,7 +252,7 @@ public class Board {
                       g.fillOval(cj+1, ci+1, CELL_SIZE-2, CELL_SIZE-2);
                   }else{
                      if( value < 0 ){
-                        g.setColor(Color.red);
+                        g.setColor(Color.black);
                         g.fillOval(cj+1, ci+1, CELL_SIZE-2, CELL_SIZE-2);
                      }
                   }
