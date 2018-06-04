@@ -7,7 +7,7 @@ package unalcol.agents.examples.games.reversi.sis20181.RexeSiReversi;
 
 /**
  *
- * @author Usuario
+ * @author Rexes
  */
 public class Move {
     public int[] from;

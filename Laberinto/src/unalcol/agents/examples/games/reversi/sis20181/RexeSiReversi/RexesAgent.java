@@ -43,11 +43,11 @@ public class RexesAgent implements AgentProgram {
         }
 
         if (p.getAttribute(Reversi.TURN).equals(color)) {
-            leerTablero(p);                                                     // Lee el tablero actual
+            leerTablero(p);                                                   
             String strArray[] = p.getAttribute(color+"_"+Reversi.TIME).toString().split(":");
-            tablero.identifyPieces();                                        // Identifica posiciones fichas negras y blancas
-            ArrayList<Move> posibleMov = tablero.movimientos(color);            // Movimientos válidos a partir de mis posiciones actuales        
-            // No se puede ejecutar movimiento alguno, pasa turno
+            tablero.identifyPieces();                                     
+            ArrayList<Move> posibleMov = tablero.movimientos(color);      
+
             if ( posibleMov.isEmpty() ) {
                 fvez = 0;
                 return new Action(Reversi.PASS);
@@ -56,15 +56,14 @@ public class RexesAgent implements AgentProgram {
                 return new Action(posibleMov.get(0).to[0]+":"+posibleMov.get(0).to[1]+":"+color);
             }
             int bestMoveIndex[] = new MiniMax().bestMove(tablero, color, 1, 3);
-            //Otras condiciones donde no hay mas jugadas por hacer
-            
+
             if( bestMoveIndex.length>=1 && bestMoveIndex[0]>=0)
                 return new Action(posibleMov.get(bestMoveIndex[0]).to[0] + ":" + posibleMov.get(bestMoveIndex[0]).to[1] + ":" + color);
             else
                 return new Action(Reversi.PASS);
         }
 
-        System.out.println("Stealing turn " + color);
+        //System.out.println("Stealing turn " + color);
         return new Action(Reversi.PASS);
     }
 

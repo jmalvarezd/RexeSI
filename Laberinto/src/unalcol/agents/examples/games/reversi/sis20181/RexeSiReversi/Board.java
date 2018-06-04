@@ -8,7 +8,7 @@ import unalcol.agents.examples.games.reversi.*;
 import java.util.ArrayList;
 /**
  *
- * @author Usuario
+ * @author Rexes
  */
 public class Board {
     static final int movX[] = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -65,10 +65,6 @@ public class Board {
         return movimientos;
     }
 
-    /**
-     * Devuelve 3 valores, el 1 si es valido ese movimiento el 2 la posicion x
-     * valida el 3 la posicion y valida
-     */
     private int[] mov(int x, int y, int movx, int movy, int color) {
         int[] ret = {0, -1, -1};
         int z = 0;
@@ -96,7 +92,6 @@ public class Board {
     
     Board makeMove(Move m, String color) {
         int[][] tablero = makeCopy();
-        //flipCoins(tablero, m, (color.equals(Reversi.WHITE))?1:-1);
         play(tablero, m, (color.equals(Reversi.WHITE))?1:-1);
         return new Board(tablero, tablero.length); 
     }  
@@ -111,14 +106,7 @@ public class Board {
         return newT;
     }  
      
-    /**
-     * Propuesta para remplazar el flipCoins, 
-     * este evalua todos los posibles cambios
-     * @param t
-     * @param m
-     * @param val
-     * @return 
-     */
+
     public boolean play( int[][]t, Move m, int val ){
         int x = m.from[0];
         int y = m.from[1];

@@ -8,7 +8,7 @@ import unalcol.agents.examples.games.reversi.*;
 import java.util.ArrayList;
 /**
  *
- * @author Usuario
+ * @author Rexes
  */
 public class MiniMax {
     // turn impar es para jugadas del max
@@ -17,7 +17,7 @@ public class MiniMax {
     public int[] bestMove(Board t, String color, int turn, int limTurnos) {
 
         if (turn > limTurnos || t.posWhite.isEmpty() || t.posBlack.isEmpty()) {
-            if((t.posWhite.size()/2)+(t.posBlack.size()/2)+10 >= (t.size*t.size)){ //ENDGAME??
+            if((t.posWhite.size()/2)+(t.posBlack.size()/2)+10 >= (t.size*t.size)){ //ENDGAME
                 int score = scoreWhenFull(t, color);
                 return new int[]{0,score};
             }
@@ -37,13 +37,13 @@ public class MiniMax {
             int score[] = bestMove(tHijo, color, turn + 1, limTurnos);
             
             
-            // MAX play
+            // MAX 
             if (turn % 2 == 1) {
                 if (best < score[1]) {
                     best = score[1];
                     bestMoveIndex = i;
                 }
-            } //MIN play
+            } //MIN 
             else {
                 if (best > score[1]) {
                     best = score[1];
