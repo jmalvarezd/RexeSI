@@ -5,7 +5,7 @@
  */
 package unalcol.agents.examples.games.reversi.sis20181.RexeSiReversi;
 
-import unalcol.agents.examples.games.reversi.*;
+import unalcol.agents.examples.games.reversi.Reversi;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class RexesAgent implements AgentProgram {
     protected int tam;
     protected int fvez = 0;
     protected Board tablero;
-    protected int K = 10;
+    protected int K = 3;
     Map<String, Integer> valor = new HashMap<>();
 
     public RexesAgent(String color) {
@@ -52,10 +52,15 @@ public class RexesAgent implements AgentProgram {
                 fvez = 0;
                 return new Action(Reversi.PASS);
             }
-            if(strArray[2].equals("0")  && strArray[1].equals("0")  && strArray[0].equals("0")){ // Si nos estamos quedando sin tiempo
+            for(Move mov : posibleMov){
+                if(isCornerMove(mov,tam)){
+                    return new Action(mov.to[0]+":"+mov.to[1]+":"+color);
+                }
+            }
+            if((strArray[2].equals("0") || strArray[2].equals("1")) && strArray[1].equals("0")  && strArray[0].equals("0")){ // Si nos estamos quedando sin tiempo
                 return new Action(posibleMov.get(0).to[0]+":"+posibleMov.get(0).to[1]+":"+color);
             }
-            int bestMoveIndex[] = new MiniMax().bestMove(tablero, color, 1, 3);
+            int bestMoveIndex[] = new MiniMax().bestMove(tablero, color, 1, K);
 
             if( bestMoveIndex.length>=1 && bestMoveIndex[0]>=0)
                 return new Action(posibleMov.get(bestMoveIndex[0]).to[0] + ":" + posibleMov.get(bestMoveIndex[0]).to[1] + ":" + color);
@@ -76,6 +81,14 @@ public class RexesAgent implements AgentProgram {
                 tablero.t[i][j] = valor.get(casilla);
             }
         }
+    }
+    
+    private boolean isCornerMove(Move mov, int tama){
+        if(mov.to[0] == 0 && mov.to[1] == 0) return true;
+        if(mov.to[0] == 0 && mov.to[1] == tama-1) return true;
+        if(mov.to[0] == tama-1 && mov.to[1] == 0) return true;
+        if(mov.to[0] == tama-1 && mov.to[1] == tama-1) return true;
+        return false;
     }
 
     @Override
